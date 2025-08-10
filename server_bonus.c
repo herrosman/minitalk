@@ -6,7 +6,7 @@
 /*   By: aosman <aosman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 21:08:48 by aosman            #+#    #+#             */
-/*   Updated: 2025/08/03 22:59:49 by aosman           ###   ########.fr       */
+/*   Updated: 2025/08/10 20:39:58 by aosman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void handle_character_completion(void)
 	}
 	// Otherwise, print the character (lowest byte) to the terminal
 	unsigned char c = g_data.current_char & 0xFF;
+	//ft_printf("[%02x]", c);
 	write(STDOUT_FILENO, &c, 1);
 	g_data.current_char = 0;
 	g_data.bit_count = 0;
@@ -73,8 +74,8 @@ static void server_handler(int sig, siginfo_t *info, void *context)
 	g_data.current_char |= ((sig == SIGUSR2) << g_data.bit_count);
 	g_data.bit_count++;
 
-	// If we've received 32 bits, process the character
-	if (g_data.bit_count == 32) {
+	// If we've received 8 bits, process the character
+	if (g_data.bit_count == 8) {
 		handle_character_completion();
 	}
 
